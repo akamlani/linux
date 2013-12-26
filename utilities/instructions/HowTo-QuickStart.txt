@@ -1,0 +1,45 @@
+"Quick Start" INSTRUCTIONS
+================================================================================
+Confused ---> Where do I Start ---> Start Here!
+
+1.  HowTo-SetupHostEnv: Setup your environment (Desktop Host PC)
+    WARNING: PERFORM THIS STEP TO BUILD SRC CODE IN STEP 3
+
+2.  HowTo-CrossCompile: Cross-Compile on Host PC, instead of native target
+    WARNING: IF DIDN'T PERFORM STEP 1, THEN MUST PERFORM STEP 2
+             TO BUILD SRC CODE IN STEP 3 + ROVER3G CODE + OTHER BINARIES
+
+3.  Ready to build binaries to flash on target?
+    WARNING: MUST HAVE PERFORMED STEP 1 or STEP 2 BEFORE THIS
+    HowTo-BuildKernel:    uImage, update-loader-image(per wireless update)
+    HowTo-BuildUBoot:     u-boot.bin
+    HowTo-BuildXloader:   MLO
+    HowTo-MakeRootfs:     rootfs.ubi
+    HowTo-MakeRamfs:      initramfs.ramdisk(per wireless update)
+
+4.  Ready to Flash Binaries on Target:
+    HowTo-CreateGumstixImage: Requires Serial w/SD Card
+    HowTo-WirelessFlashGumstixImage: Wireless update (not including MLO)
+    HowTo-SDCardImage: (Create Image to boot from SD Card instead of Nand - development purposes)
+
+5.  Need to change from filesystem from read-only(ro) to read-write(rw)
+    HowTo-RemountRootfs
+
+6.  Need extra utilities?  Try Opkg Management.
+    HowTo-UseOverlayOpkg
+
+7.  Need more help on target?
+    HowTo-UseUBootEnv (Environment Variables from Target Linux User Space)
+    HowTo-BreakAtUBootPrompt (bootdelay=0 -> bootdelay=x)
+    HowTo-UseSysfs/HowTo-UseDebugFs
+    HowTo-TipsAndTricks (misc help items)
+
+8.  Save Time/Debugging
+    HowTo-ConfigureForNFS  (Rootfs on Host PC, not on target)
+    HowTo-MeasureBootTime  (how long does it take to boot or shutdown)
+    HowTo-IncreaseCPUSpeed (Change Max Rating CPU Speed)    
+
+9.  Debug with IDE (Setup with Eclipse)
+    HowTo-CrossDebugWithEclipse
+
+

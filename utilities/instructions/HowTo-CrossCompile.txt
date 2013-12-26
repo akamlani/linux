@@ -1,0 +1,52 @@
+"Cross-Compile" INSTRUCTIONS
+================================================================================
+Release 2.5 introduced the ability to cross-compile with minium setup
+This does not explain all the details for cross-compiling every module or program
+Rather this is for the Rover3g base code for the Gumstix
+A similar approach can be used for other binaries/libraries
+
+1.  Copy to the following scripts to an environment area
+    Scripts: makeenvtemplate.sh, setenvide.sh, setroverenv.sh
+    <<Scripts are from: <svn>/Gumstix/scripts/ >>
+
+    e.g. installation path
+    /home/user/build/scripts/ 
+2.  Install the CodeSourcery Cross Compiler (version 2009q1-203)
+    Note that we are currently tied to this version
+    Linux (32-Bit):   <svn>/Gumstix/toolset/arm2009q1-203-arm-none-linux-gnueabi.bin
+
+    e.g. installation path (replace /home/user with your top dir):
+    /home/user/toolchain/arm2009q1-203/CodeSourcery/Sourcery_G++_Lite
+
+    <Execute installation package>
+    chmod +x *.bin
+    ./*.bin
+3.  Install the include files and library dependency package
+    <svn>/Gumstix/src/rootfs-deps-cc.tgz
+
+    e.g. installation path:
+    /home/usr/build/src/mntfs
+
+    <extraction>
+    tar -xzvf rootfs-deps-cc.tgz -C /home/usr/build/src/mntfs
+4.  Edit the file: makeenvtemplate.sh for your environment
+    (a) setenvide.sh arg#1: change "/home/user" for top level directory
+        change to where toolchain was installed
+       
+        the remaining path installation should be defaulted as:
+        .../toolchain/arm2009q1-203/CodeSourcery/Sourcery_G++_Lite
+        if this is not the default path, edit setenvide.sh
+        edit the SV_TOOLCHAIN_PATH environment variable if different
+
+    (b) setenvide.sh arg#2: change "/home/usr/build/src/mntfs" to dependency package top dir
+        change to location where dependency package was installed
+5.  Execute the environment scripts (source them)
+    source ./makeenvtemplate.sh
+6.  Note requires changes in Rover3g for cross Compilation
+    <Includes.h, makefile - changes have been given>
+7.  Now compile as normal (make clean, make, make strip, make tar)
+
+
+
+   
+

@@ -1,0 +1,47 @@
+"Configure for NFS" INSTRUCTIONS
+====================================================================
+NFS is the Network File System
+This allows the kernel to mount and boot a filesytem stored somewhere else
+This is handy when performing development tasks
+
+1.  untar rootfs.tar.gz onto host pc 
+    (e.g. tar -xzvf rootfs.tgz -C ${SV_BUILD_PATH}/filesys/rootfs-nfs)
+2.  Install package dependencies on host pc (linux) 
+    This can be done on Ubuntu by 'sudo apt-get install <package>'
+
+    nfs-kernel-server (e.g. 1:1.2.4-1ubuntu2)
+    tftp-hpa
+3.  Modify host pc path to nfs rootfs
+    edit /etc/exports: <path> <attributes>
+
+    e.g. /etc/exports:
+    <top_dir>/build/filesys/rootfs-nfs \
+    *(rw,sync,no_root_squash,no_all_squash,no_subtree_check)
+4.  Manual restart on nfs-kernel-server on host pc
+    /etc/init.d/nfs-kernel-server restart
+5.  Once already booting on target device (nand or sd-card)
+    Execute /home/root/scripts/configure-nfs.sh
+    - Change any of the defaulted values when prompted
+    - Configure host pc for settings entered (e.g. server ip address, netmask)
+    - If keeping default nfs path make softlink on host pc
+      from /exports/rootfs-nfs -> <top_dir>/rootfs-nfs
+      This should match what was entered in /etc/exports
+    
+    Requires Ethernet connection from Host PC to target (via expansion board)
+    Not able to perform this by wireless - as wireless is not available this early on in boot
+
+    Execute /home/root/scripts/switch-boot-device.sh
+    - select option 4 (boot from nfs)   
+
+6.  NFS operation
+    Operations should behave as normal but be booting from rootfs on host pc
+    Reboot cmd will shutdown rootfs, but not actually reboot the device
+    Need to perform manual reset on power for this
+
+7.  Switch back to Booting from Nand
+    Change boot device selection on target
+    Execute script (/home/root/scripts/switch-boot-dev.sh) and select normal boot (nand)
+    just as in Step 7 a manual reset on power is required after reboot cmd
+
+8.  Device should not be booting from Nand as in original state
+   

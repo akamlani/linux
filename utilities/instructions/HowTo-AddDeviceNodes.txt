@@ -1,0 +1,16 @@
+"Add Device Nodes" INSTRUCTIONS
+================================================================================
+Device Nodes are those files created in /dev in rootfs
+
+1.  Initially device nodes were statically created (/dev/createdevnodes.sh)
+    Now Device Nodes are created by mdev at run-time upon boot-up
+    The only static device nodes are /dev/console and /dev/null
+    Static means they are always there and not created at run-time
+2.  To make new static device nodes; use mknod command
+    mknod -m <permissions> <device> <type> <major num> <minor num>
+    e.g. mknod -m 0662 console c 5 1 -> this is an example of a character device
+3.  The other option is to modify /etc/mdev.conf in the root file system
+    This will add additional device nodes that are not part of the default list at boot
+    You can retrieve the example mdev.conf from busybox examples (src\busybox_1_19_stable.tgz)
+    
+

@@ -1,0 +1,18 @@
+"Stage Building" INSTRUCTIONS
+================================================================================
+In some cases it may be useful to stage the building environment
+This is typical for building modules,binaries,libraries with the rootfs
+This serves as an intermediate step between exporting and placing on rootfs
+
+1.  The final staged version will then be copied over to the rootfs when ready
+    Useful for involving stripping, modifying, or exporting to a particular structure
+
+    For example:
+    (i)  exporting modules from the kernel
+    (ii) installing libraries with --prefix set and installing to set DESTDIR
+
+2.  Staging Area is kept on the current build system as:
+    <top dir>/build/staging/images -> ${SV_STAGING_PATH}
+
+    <This is just an example based on the setup scripts being used>
+

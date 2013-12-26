@@ -1,0 +1,28 @@
+"Increase CPU Frequency" INSTRUCTIONS
+================================================================================
+1.  The default Max CPU Frequency is set to 500 MHz.
+2.  The Gumstix can be set to a maximum CPU Rating of 720 Mhz
+    However CPU speeds above 500 MHz are considered overclocking
+    At 720 MHz Overlocking issues are still seen at boot-up with SD Card present
+    At 600 Mhz no apparent issues are seen on nand or with SD card
+    This is based on fixed clocking and ram timing patches up release 2.9
+    For stability reasons until proven otherwise, it is currrently kept at 500 MHz
+3.  The max CPU Frequency can be changed by u-boot environment variables
+    <Reference HowTo-UseUBootEnv>
+4.  Change mpurate
+    e.g fw_setenv mpurate 600 ---> via linux user space
+    e.g setenv mpurate 600; saveenv ---> via u-boot command prompt
+5.  At 720 Mhz, it should take about ~8+ sec boot time 
+    At 600 Mhz, it should take about ~9+ sec boot time
+    At 500 Mhz, it should take about ~10 sec boot time
+    Target Compilation is also faster at 600 and 720 MHz
+6.  Burning scripts should be changed as well
+    As this would be the process of keeping the environment in sync
+    As well as being deployed to all Gumstix hardware in nand
+    <svn>/Gumstix/scripts/nand-burner.cmd -> regenerate nand-burner.scr 
+    <Reference HowTo-UpdateNandBurnerScripts>
+    <svn>/Gumstix/src/rootfs-ramfs.tgz -> /home/root/scripts/update-loader-burnimages.sh
+    <Reference HowTo-MakeRamfs>
+    
+    <In both cases change the u-boot environment variables area>
+    <This is where setenv or fw_setenv are used>

@@ -1,0 +1,83 @@
+"Basics of Git" INSTRUCTIONS
+================================================================================
+Git is a version control system that we commonly use in linux
+We will use it for working with external source, not internal Platform source
+This will be used on the host machine, not the target
+
+1.  Clone a Repository
+    git clone git://<git repsoitory link> <folder>
+    e.g. git clone git://git.denx.de/u-boot.git u-boot
+
+    Note that this will automatically sync code base from the master branch
+    After this step you will need to checkout to the branch of interest
+
+2.  Checking out a particular label or branch
+    As noted a particular branch or label should be switched to once cloned
+
+    <branch>
+    git checkout --track -f -b <new branch name> <branch to branch from>
+    e.g. git checkout --track -f -b master_local origin/master
+
+    <label>
+    git checkout -f -b <new branch name> <label to branch from>
+    e.g. git checkout -f -b v2011.09_local v2011.09
+
+
+#   Git Repository
+    Now to use git, you must be in a folder with .git 
+    This can be seen with 'ls -a' in current directory 
+    If there is no .git folder, there is no history to perform git with
+
+#   How to list current tags (labels) in git
+    git tag -l
+
+#   How to list current branches in git
+    git branch -a
+
+#   How to make a patch
+    git diff <path to changed file> <path to original file> > patchname.patch
+    e.g. git diff -p board/overo/overo.h board/overo/overo.h.orig > uart2-pin-mux.patch
+
+    <note that this must be run for the root of the folder where a .git folder exists>
+    <you may want to examine the patch afterwards to determine if it is correct>
+
+#   How to apply a patch
+    git apply -v <patch>
+    e.g. git apply -v uart2-pin-mux.patch
+     
+    <note patches should be applied when changes line up closely>
+    <note this occurs when a patch is being applied to a different version of file(s)>
+    <there will be an * next to your current branch in the list>
+
+#   How to reverse a patch
+    Patches can be undone/reversed as well:
+    git apply -R <patch>
+    e.g. git apply -R uart2-pin-mux.patch
+
+#   How To remove white space from applying a patch
+    use --ignore-whitespace, --ignore-space-change options with 'git apply' when applying a patch 
+    use --white-space=fix, if still exhibiting errors after this with 'git apply'
+
+#   How to commit to local branch
+    It may be useful to commit the changes to your local branch first
+    This is particularly useful to stage your changes or remove the "-*dirty" name from the image
+    "-*dirty" will be appended to some images from git repos with changes not yet commmitted
+
+    git add <path to file/filename>  (to add your modified file to the current branch)
+    git commit -m <"comment">        (to add your check-in comment to the commit)
+    git log --oneline --date-order   (to see the status of the commits)
+
+    Example:
+    git add board/overo/overo.h
+    git commit -m "PLATFORM UART Muxing Patch Commit"
+    git log --oneline --date-order
+
+#   But my image name has the git commit in it!!!
+    Some images (e.g. kernel image) appends the git commit number to the image name
+    This is only done if the .git folder exists due to cloning a respository
+    The best way to handle this is by moving (mv) the .git outside the build directory
+    e.g. mv u-boot/.git tmp/.git
+
+    <only needed when building the image, then the changes can be reversed>
+
+    

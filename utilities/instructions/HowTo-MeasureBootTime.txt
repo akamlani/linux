@@ -1,0 +1,26 @@
+"Measure Boot Time" INSTRUCTIONS
+================================================================================
+Do you need to measure timing based on serial output?
+You can get an estimate measure from using timestamps on host development pc
+
+1.  The easiest way to measure boot-time is done on the host pc rather than on target
+    This should give an approximate time rather than exact measure
+2.  Use the python script grabserial.py
+    Can be found in <svn>/Gumstix/scripts
+3.  Execute the script at a normal command prompt on host pc (not telnet or serial)
+    Note that you cannot use Putty/Minicom/HyperTerm/Teraterm,etc.. at the same time
+    This grabs the device serial and uses host timestamps
+4.  Execute the following line to give overall boot-time
+    ./grabserial.py -v -d "/dev/ttyUSB0" -b 115200 -w 8 -p N -s 1 -e 30 -t
+
+    <note that this assumes a usb-serial device on /dev/ttyUSB0>
+    Replace with a different tty device if yours is different
+    You should be able to determine this from output of dmesg on host pc once connected
+5.  To measure just from the time the kernel starts loading:
+    ./grabserial.py -v -d "/dev/ttyUSB0" -b 115200 -w 8 -p N -s 1 -e 30 -t -m "Starting kernel"
+
+    <same pre-requisite notes as above in previous step 4>
+6.  Note that this method can also be used for shutdown time
+
+
+     

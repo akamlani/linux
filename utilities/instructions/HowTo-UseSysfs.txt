@@ -1,0 +1,21 @@
+"Using Sysfs" INSTRUCTIONS
+================================================================================
+Sysfs is the virtual file system (VFS) of the kernel mirror to user space
+It can also be used for configuration via sysctl mechanism
+
+1.  Sysfs should already be mounted upon bootup, so no manual mount is required
+    Manual Mount at command line on target can be achieved by: mount -t sysfs none /sys
+2.  Sysfs is by default mounted at /sys
+    It can also be used to control GPIO configuration and values
+    Assuming muxing has already been setup correctly by bootloader and kernel
+    Direction of input only pins cannot be changed from user space
+3.  Example of Confuring GPIO from userspace at command prompt
+    echo <gpio num> > /sys/class/gpio/export ---> set gpio 
+    echo out > /sys/class/gpio/gpio<gpio num>/direction ---> set gpio as an output (in/out)
+    echo 1 > /sys/class/gpio/gpio<gpio num>/value ---> trigger gpio as high
+    echo 0 > /sys/class/gpio/gpio<gpio num>/value ---> trigger gpio as low
+    
+    cat /sys/class/gpio/gpio<gpio num>/value
+    echo <gpio num> > /sys/class/gpio/unexport
+
+    e.g. <gpio num=114>

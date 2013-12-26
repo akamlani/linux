@@ -1,0 +1,40 @@
+"Using UBoot Env Variables" INSTRUCTIONS
+================================================================================
+Device partition /dev/mtd2 is the default u-boot environment variable area within nand
+These variables are saved to nand if requested to do so (e.g. saveenv)
+
+1.  There are two mechansims to change the u-boot environment
+    (i)  Use case when booting normally from nand and logged in at linux prompt
+    fw_printenv/fw_setenv utilities from user-space
+    uses /etc/fw_env.config for mapping /dev/mtd2
+    (ii) Use case when booting from mmc card with u-boot
+    printenv/setenv/saveenv utilities from within u-boot
+2.  Build fw_printenv/fw_setenv utilities
+    These are included as part of u-boot (e.g. u-boot/tools/env)
+    Requires use of cross-compiler (not native on target)
+    <Reference HowTo-BuildUBoot>
+
+    cd u-boot
+    make HOSTCC=${CROSS_COMPILE}gcc EXTRAVERSION=-platform env
+
+    fw_printenv will be generated in ${SV_BUILD_PATH}/src/u-boot/tools/env/
+    fw_setenv is just a symbolic link to fw_printenv on the rootfs
+    <Note both utilities are already included in checked in the rootfs release in /sbin>
+
+3.  fw_printenv usage (same as printenv in u-boot)
+    fw_printenv ---> prints entire area of /dev/mtd2
+    fw_printenv <env variable> ---> prints single env variable given as input
+    e.g. fw_printenv svcenablewlan
+4.  fw_setenv usage (same as setenv + saveenv in u-boot)
+    fw_setenv <env variable> <arguments> ---> set a particular environment variable value
+    e.g. fw_setenv svcenablewlan 1
+
+    fw_setenv <env variable> ---> removes the envirnonment variable from nand (not defined)
+    e.g. fw_setenv svcenablewlan
+
+    <note that there is no saveenv, it automatically saves to nand>
+
+   
+          
+
+

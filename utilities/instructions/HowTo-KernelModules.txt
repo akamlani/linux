@@ -1,0 +1,37 @@
+"Kernel Modules" INSTRUCTIONS
+================================================================================
+A Kernel module is loaded at run-time rather than part of the binary kernel image (uImage)
+
+1.  It still must be compiled against the same kernel executing
+    Therefore it must be compiled against the top level of the kernel source
+2.  The Rover GPIO (rover_drv.ko) is a loadable kernel module (LKM)
+    ---> Makefile (<svn>/Gumstix/src/GPIO/driver/src)
+    
+    It uses an env variable pointing to the top level kernel src (${SV_KERNEL_PATH})
+    ${SV_KERNEL_PATH} is exported as part of the setup scripts
+    <reference HowTo-SetupHostEnv or HowTo-CrossCompile>
+    WARNING: THIS STEP MUST BE DONE BEFOREHAND OR COMPILE WILL FAIL.
+
+    Assuming the same directory structure is used, no action is needed
+    The ARCH and CROSS_COMPILE flags are already defined and exported
+3.  Build
+    Since the environment is setup already -> just build as normal 
+    execute 'make' using Makefile exists
+    which will execute -> $(MAKE) $(KBUILD_FLAGS) modules
+    
+    ouput: rover_drv.ko for this kernel module
+    <the same mechanism can be used for other kernel modules>
+
+4.  The Kernel Module can then be loaded at run-time
+    insmod    <full path to kernel module>/*.ko (e.g. insmod rover_drv.ko)
+    rmmod     <kernel module> (note there is no *.ko extension)
+    lsmod     (to list modules currently loaded)
+
+    <Alternative Option>
+    modprobe <kernel module.ko>  
+    However dependencies must be run and it must be added to /etc/modules in the rootfs
+    Modprobe assumes the modules exist in lib area defined by modules.dep
+    Dependencies executed on target as 'depmod' 
+    This would then load the module at boot-up
+
+

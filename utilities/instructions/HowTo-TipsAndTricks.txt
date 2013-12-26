@@ -1,0 +1,110 @@
+"Tips and Tricks" INSTRUCTIONS
+================================================================================
+Useful misc tips and tricks notes for Gumstix environment
+
+# update timestamp on target
+date +%m%d%H%M%Y > etc\timestamp
+
+<Assuming updated from output of date command before boot>
+<Other option is to to write to svctimestamp u-boot env variable after boot>
+
+# make journaled filesystem (e.g. jffs2) on host development pc for target
+mkfs.jffs2 -l -n -r <directory> -o <filename_input.img> -e 131072
+sumtool -l -n -i <filename_input.img> -o <filename_output.img> -e 128KiB
+
+<Note this uses 128KB Sector Size; based on OMAP NAND Sector size>
+directory: directory name that contains information to make an image from
+filename_input.img:  given output of mkfs.jffs2
+filename_output.img: given output of sumtool using input from output of mkfs.jffs2
+
+# change interface address or properties
+(i)  Edit  /etc/network/interfaces of rootfs with vi for network interface changes
+     Execute /etc/init.d/networking or reboot device
+
+(ii) By command line on target
+     ifconfig <interface> <ip address> netmask <mask> up
+     e.g. ifconfig eth0 192.168.11.66 netmask 255.255.0.0 up
+     <Note that these changes will not be saved on reboot in this option>
+
+# change wireless ssid by command line on target
+iwconfig wlan0 essid "svms-network"
+iwconfig wlan0 essid "svms-network" channel <x>
+iwlist wlan0 scan ---> rescan for network
+
+# Copying attributes
+using -a option to copy attributes or symbolink links with 'cp' command
+e.g. cp -av <file1> <location or file>
+
+<If not used with '-a', entire file instead of symbolic link will be copied>
+<If not attributes will not be preserved>
+
+# Removing quiet boot process 
+Currently the kernel and rootfs performs a quiet boot
+Therefore most messages get logged to the only kernel buffer and not also the console
+However output can be seen by executing 'dmesg' command
+
+To turn off a quiet boot, and have all messages come to console as well, perform:
+(i)  remove quiet parameter from optargs u-boot environment
+     (a) linux user env: fw_setenv optargs
+     (b) u-boot env: setenv optargs; saveenv
+
+     <note that this removes optargs from being defined>
+     <either option (a) or (b) and then reboot device>
+(ii) edit /etc/default/rcS
+     change VERBOSE=no -> VERBOSE=yes
+
+# Output to Kernel Buffer
+Don't want to output to console, but instead to Kernel buffer?
+Useful for viewing past history where console is not active (e.g. boot log with no console)
+echo "message" > /dev/kmsg
+dmesg (view output of message)
+
+# Extracting cpio.gz file format
+(i)  zcat *.cpio.gz | cpio -idv
+(ii) zcat *.cpio.gz | cpio -idv -H newc --no-absolute-filenames
+<Note that no dev nodes will be extracted>
+
+# SD Card Partition Table is not valid
+Best way to solve this is create an empty partition table and then reformat the card
+Note that you can also do this by Graphical GPartition Editor tool
+(i)  sudo fdisk /dev/sdc
+     -> option o
+     -> option w
+(ii) reformat the card with mkcard.sh script
+     <Reference HowTo-SDCardImage>
+
+# Lanuching index.html with firefox in a new window by cmd line
+firefox -new-window index.html
+
+# enable wifi continuously at boot
+Currently the boot script /etc/init.d/resetwlan0 controls the wlan0 interface
+It is one of the last scripts executed at startup
+By default the interface will be brought down (ifdown wlan0)
+It will only be brought up if a 'svcenablewlan' u-boot env (/dev/mtd2) is defined and enabled
+
+To enable from linux user space on target:
+fw_setenv svcenablewlan 1
+
+The other alternative is to continually use the magnet to enable wlan on every boot
+
+# what is my wireless ssid
+iwconfig wlan0
+<note we are currently using svms-network, not jim-network>
+
+# long time to connect with ssh/sftp/scp
+This is due to the ethernet interface
+If using wireless bring down eth0 and the process will be quick for this particular boot
+'ifdown eth0'
+
+# what arguements do scripts take
+Shell scripts (*.sh) that take arguements as input can be determined by the output 'usage'
+Execute the scripts without any parameters and a usage will print to console
+This is true for both scripts on target as well as host pc development scripts
+e.g. ./setbuildenv.sh - to determine proper usage
+usage: ./setbuildenv.sh <top dir>
+
+source ./setbuildenv.sh /home/user
+
+# proper version of rover_drv.ko
+The rootfs always contains a proper version of this Loadable Kernel Module file
+It can be found in /lib/modules/2.6.35-platform+/kernel/drivers/svms

@@ -1,0 +1,9 @@
+"Using debugfs" INSTRUCTIONS
+================================================================================
+1.  mount debugfs
+    mount -t debugfs none /sys/kernel/debug
+2.  using debugfs to change pinmux configuration
+    Examples:
+    cat /sys/kernel/debug/gpio
+    cat /sys/kernel/debug/omap_mux/board 
+

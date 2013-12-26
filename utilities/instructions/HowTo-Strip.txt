@@ -1,0 +1,19 @@
+"Stripping binaries/libraries" INSTRUCTIONS
+================================================================================
+It is a good idea to strip unneeded debug information before including binary or library in image
+Striping will reduce the size of the library or binary
+This assumes you do not need this information for debug
+
+
+1.  Binaries or libraries can be stripped on target or with cross compiler 
+    If using cross compiler, proper dependencies must be setup first:
+    <Reference HowTo-CrossCompile, HowTo-SetupHostEnv>
+2.  Stripping should be done with the --strip-unneeded option
+    This is important for kernel loadable modules (*.ko)
+    Else symbols cannot be resolved for the kernel
+    And insmod/modprobe utilities will report invalid format when loading
+3.  Option (i) On Native Target
+    strip --strip-unneeded <filename>
+4.  Option (ii) Cross Compiler
+    arm-none-linux-gnueabi-strip --strip-unneeded <filename>
+5.  The size can be verified with ls -l on comparision of files before and after

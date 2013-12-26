@@ -1,0 +1,30 @@
+"SDCard Image on Gumstix" INSTRUCTIONS
+================================================================================
+For development purposes, you may find it easier to work with an SD Card, rather than NAND
+There will be two separate partitions created (boot (FAT32), gumstix (linux))
+This will enable booting from the SD Card instead
+
+
+1.  To partition the SD Card correctly, you can use the script mkcard.sh:
+    <svn>/Gumstix/scripts/mkcard.sh
+
+    <Should be executed with root permissions on host development pc>
+    sudo ./mkcard.sh <drive>
+    e.g. sudo ./mkcard.sh /dev/sdc
+
+    Reinsert the sd card into host pc for autodetection of partitions afterwards
+2.  Copy binaries to boot partition:
+    <MLO first, if booting MLO from SD Card>
+    cp -vrf {MLO,u-boot.bin,uImage} /media/boot/
+
+    <Binaries checked in at <svn>/Gumstix/binaries>
+3.  Extract rootfs under gumstix partition
+    tar -xzvf rootfs.tgz -C /media/gumstix
+    
+    <Note this assumes gumstix partition has been mounted on /media/gumstix>
+    <rootfs.tgz checked in at <svn>/Gumstix/src>
+4.  Sync the data to the device and safely unmount
+    sync; umount /media/boot; umount /media/gumstix
+ 
+    <Note this assumes locations of mounting as above>
+

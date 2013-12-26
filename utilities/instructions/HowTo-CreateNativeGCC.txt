@@ -1,0 +1,48 @@
+"CREATING NATIVE GCC" INSTRUCTIONS
+================================================================================
+Background information on how Native GCC on Target was created
+
+1.  Either selection can be used
+    (i)  Use dependency files from installed jail rooted Opkg (arm-angstrom-linux-gnueabi)
+    (ii) Use dependency files from cross-compiled gcc for arm target (arm-none-linux-gnueabi)
+
+    Option (i) produced better timing results, so we are currently using this.
+2.  Copy mpfr library dependencies (e.g. for version 4.0.0) to /usr/lib
+    lib/libmpfr.so
+    lib/libmpfr.so.4
+    lib/libmpfr.so.4.0.0
+3.  Copy gmp library dependencies (e.g. for version 10.0.1) to /usr/lib
+    lib/libgmp.so.10
+    lib/libgmp.so.10.0.1
+    lib/libgmp.so.10
+4.  Copy libc dependencies to /usr/lib
+    lib/libopcodes-2.18.50.0.7.20080502.so
+    lib/libbfd-2.18.50.0.7.20080502.so
+    
+    lib/crt1.o
+    lib/crti.o
+    lib/crtn.o
+    lib/libc_nonshared.a
+    lib/libpthread_nonshared.a
+5.  Copy gcc dependencies
+    lib/gcc/arm-angstrom-linux-gnueabi/4.3.3/ -> copy to /usr/lib/
+    libexec/gcc/arm-angstrom-linux-gnueabi/4.3.3/ -> copy to /usr/libexec
+6.  Copy arm-*-linux-gnueabi binaries
+    copy /bin/arm-*-linux-gnueabi binaries to /usr/bin
+    create symbolic links for these  (e.g. gcc -> arm-angstrom-linux-gnueabi-gcc)
+7.  Symbolic link within /lib
+    Some programs needed a symbolic link of cpp within /lib
+    /lib/cpp -> /usr/bin/arm-angstrom-linux-gnueabi-cpp
+8.  Verify proper path for /usr/include
+    (i)  /usr/include/c++/4.3.3/arm-angstrom-linux-gneabi/bits
+    (ii) /usr/include/c++/4.3.3/arm-none-linux-gneabi/bits
+9.  For Angstrom
+    Copy over generated symbolic links in /usr
+    arm-angstrom-linux-gnueabi/bin folder to /usr
+    These point to the /usr/bin/arm-angstrom-linux-gnueabi utilities
+
+
+
+
+
+

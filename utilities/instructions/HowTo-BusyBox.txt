@@ -1,0 +1,46 @@
+"Busybox" INSTRUCTIONS
+================================================================================
+1.  Busybox is a small static version of the unix utilities seen on the rootfs
+    All the utilities are statically linked to /bin/busybox
+    This can be verified by performing ls -l of the rootfs
+2.  What about other programs?
+    These programs were built separately and are not part of the busybox implementation
+3.  Configuration Files
+    There are the custom files we will use rather than the default configuration
+    <svn>/Gumstix/configs/config_busybox --- for main rootfs
+    <svn>/Gumstix/configs/config_ramfs_busybox --- for initramfs
+4.  Source Code from branch (1_19_stable) 
+    git clone git://busybox.net/busybox.git busybox
+    git checkout --track -b 1_19_stable remotes/origin/1_19_stable
+    
+    checked in as <svn>/Gumstix/src/busybox_1_19_stable.tgz
+    extract this source code to disk (e.g. <top dir>/build/src/tools)
+5.  Copy appropriate config file as in Step 3 to .config in root of busybox src code
+    e.g. cp -av <svn>/Gumstix/configs/config_busybox <top dir>/build/src/tools/busybox/.config
+6.  Build Process
+    Precondition: (HowTo-SetupHostEnv or HowTo-CrossCompile)
+    WARNING: THIS STEP MUST BE DONE BEFOREHAND OR COMPILE WILL FAIL.
+
+    make oldconfig  (parses configuration from the .config we copied)
+    make menuconfig (if changes are required for configuration)
+    make clean      (cleans environment)
+    make 
+    make CONFIG_PREFIX=${SV_BUILD_PATH}/staging/images/busybox install 
+
+    CONFIG_PREFIX installs to given path
+    Note that we are using stage building here <Reference HowTo-StageBuilding>
+7.  Final touches on Staging Area
+    chmod 4755 ${SV_BUILD_PATH}/staging/images/busybox/bin/busybox
+    cp -v ${SV_BUILD_PATH}/src/tools/busybox/busybox.links ${SV_BUILD_PATH}/staging/images/busybox/etc/
+    arm-none-linux-gnueabi-strip --strip-unneeded ${SV_BUILD_PATH}/staging/images/busybox/*
+
+8.  Verify there are no shared libraries used (using cross compiler)
+    arm-none-linux-gnueabi-readelf -a ${SV_BUILD_PATH}/staging/images/busybox/bin/busybox | grep "Shared library"
+
+9.  Copy from staging area to rootfs
+    cp -avrf $SV_BUILD_PATH/staging/images/busybox/* ${SV_BUILD_PATH}/filesys/rootfs/ 
+    
+    <Note the comments will change based upon performing for rootfs or rootfs-ramfs>>
+
+
+    

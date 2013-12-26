@@ -1,0 +1,15 @@
+"CREATING A Filesys RAMFS IMAGE" INSTRUCTIONS
+================================================================================
+The Ramfs Image is only used for the wireless update, not normal operation
+It is a Ramfs Image, as no changes are saved upon reboot in this temp filesystem
+
+1.  First untar the <svn>/Gumstix/src/rootfs-ramfs.tgz 
+    (tar -xzvf rootfs-ramfs.tgz -C ${SV_BUILD_PATH}/filesys/rootfs-ramfs)
+2.  Make any necessary changes to the rootfs-ramfs
+3.  Execute the following script (<svn>/Gumstix/scripts/makeramfs.sh)
+    Copy script to same level as rootfs-ramfs (e.g. ${SV_BUILD_PATH}/filesys/makeramfs.sh)
+    Execute as ./makeramfs.sh in ${SV_BUILD_PATH}/filesys
+4.  output should be initramfs.cpio.gz, initramfs.ramdisk
+5.  Burn initramfs.disk to nand (goes along with update-loader-image)
+    <Reference HowTo-CreateGumstixImage HowTo-WirelessFlashGumstixImage>
+    <Reference Howto-BuildKernel for update-loader-image>

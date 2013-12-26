@@ -1,0 +1,86 @@
+"Creating a Rootfs" INSTRUCTIONS
+================================================================================
+These steps give a high-level overview of how the rootfs and rootfs-ramfs were created
+This is just background information, you will not need to perform these steps with existing code base
+
+1.  Create proper minimal directory structure
+    mkdir rootfs
+    mkdir -p rootfs/{boot,proc,sys,mnt,dev,lib,etc,bin,sbin,tmp,usr,var}
+    mkdir -p boot
+    mkdir -p usr/bin usr/lib usr/sbin
+    mkdir -p var/lib 
+    mkdir -p var/volatile
+    mkdir -p var/volatile/cache var/volatile/lock var/volatile/log var/volatile/run var/volatile/tmp
+    chmod 1777 var/volatile/tmp
+    mkdir -p etc/init.d
+    mkdir -p dev/pts
+    mkdir -p dev/shm
+    mkdir -p debug
+    mkdir -p media
+    mkdir -p media/ram media/net
+    chmod 755 dev/pts dev/shm
+    ln -sf /var/tmp tmp
+    ln -sf volatile/tmp var/tmp
+    ln -sf volatile/cache var/cache
+    ln -sf volatile/lock var/lock
+    ln -sf volatile/log var/log
+    ln -sf volatile/run var/run
+    ln -sf /media/net mnt/net
+    ln -sf /media/ram mnt/ram
+
+2.  From Cross-Compiler Environment; 
+    Copy over target libraries from cross-compiler and place in rootfs lib staging area
+    <Reference HowToStageBuilding>
+    These must be cross-compiled target for ARM, not x86 (arm-none-linux-gnueabi)
+    find . -name '*\.so\.*'  (libSegault, libc, libstdc++ etc...)
+
+3.  change ownership of files in staging area 
+    chown -R -v root:root <staging folder>
+
+4.  Strip the libaries (*.so,ldconfig) from staging area 
+    <Reference HowTo-Strip>    
+
+5.  Use Busybox for basic unix utilities
+    Likewise this should be staged as well in the rootfs
+    <Reference HowTo-BusyBox>
+
+6.  sysvinit
+    sysvinit controls how the initialization is performed once the rootfs is mounted
+    this includes the startup scripts in /etc/rc*, init and shutdown utilities, etc...
+
+    for ramfs:
+    init -> /sbin/init
+
+7.  Kernel Modules
+    Once the Kernel Modules have been installed (per HowTo-BuildKernel) to staging area
+    Then the modules can be copied from the staging to the rootfs
+
+    <note this will need to be done for ramfs and normal versions of the kernel>
+    cp -avrf ${SV_STAGING_PATH}/images/modules-2.6.35/* ${SV_BUILD_PATH}/rootfs
+
+    <do not copy the source and build to rootfs from exported staging area>
+    rm -rf source build <from rootfs/lib/modules/<kernel version>
+     
+8.  /usr/include files
+    The Kernel usr/include path needs to be copied to the rootfs (HowTo-BuildKernel)
+    It is up to you if you want to use the staging area for this
+    
+    The library dependency files need to be copied as well
+    $SV_TOOLCHAIN_PATH/arm-none-linux-gnueabi/include/c++ -> rootfs/usr/include
+    $SV_TOOLCHAIN_PATH/arm-none-linux-gnueabi/libc/usr/include -> rootfs/usr/include
+
+    <currently we are only doing this for rootfs, not ramfs>
+    <as we are only building source code on the main rootfs, not the ramfs>
+    
+9.  The remaining steps are specific to particular binaries and libraries
+    For the particular distribution
+
+    <Note this is the general process for rootfs and ramfs>
+    <ramfs should be considerably smaller, as we only include a minimal amount>
+
+
+
+     
+    
+    
+    

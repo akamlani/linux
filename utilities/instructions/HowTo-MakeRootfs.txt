@@ -1,0 +1,13 @@
+"CREATING A ROOTFS IMAGE" INSTRUCTIONS
+================================================================================
+Need to make changes to the rootfs image?
+
+1.  First untar the <svn>/Gumstix/src/rootfs.tgz onto your host development pc
+    (tar -xzvf rootfs.tgz -C ${SV_BUILD_PATH}/filesys/rootfs)
+2.  Make any necessary changes to the rootfs
+3.  Copy <svn>/Gumstix/configs/ubinize.cfg to same level as rootfs folder
+4.  Copy <svn>/Gumstix/scripts/makerootfs.sh to same level as rootfs folder
+5.  execute makerootfs script (expects folder named rootfs)
+6.  Output should rootfs.ubi if successful
+7.  Burn this ubi image to nand
+    <Reference HowTo-CreateGumstixImage, HowTo-WirelessFlashGumstixImage>

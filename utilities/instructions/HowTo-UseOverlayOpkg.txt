@@ -1,0 +1,46 @@
+"Overlayed Opkg" INSTRUCTIONS
+================================================================================
+Additional Packages can be installed with Opkg Management
+These come in forms of *.ipk files downloaded from Repositories
+<<Reference HowTo-CreateOpkg for Repository links>>
+
+1.  Opkg should NOT be executed from the main rootfs default area
+    Instead Opkg should be executed from a rooted jail chamber
+    Opkg will manage the installed binary packages
+2.  As opkg uses different dependencies than our rootfs, only copy necessary depedencies
+    Do not let opkg modify the rootfs at will
+3.  Overlay the opkg basic system on target:
+    sftp root@172.21.8.x (x=Target IP Host) 
+    put opkg-basic-install.tgz
+    
+    Extract the Overlay of Opkg:
+    tar -xzvf opkg-basic-installer.tgz 
+   
+    location:
+    <svn>/Gumstix/packages/opkg-basic-installer.tgz
+4.  Execute the following command
+    chroot /home/root/packages/_install
+    This is the root area for opkg where all installation occurs (rooted jailchamber)
+5.  Now you should be in a rooted jail cell
+    Therefore you will no longer have access to any of the rootfs directly
+6.  To see a list of the currently installed packages
+    <svn>/Gumstix/packages/opkg_installed.txt
+   
+    or from opkg:
+    execute the command 'opkg list-installed'   
+7.  install packages once in rooted jail cell
+    opkg install <pkgname>.ipk
+
+    to remove a package:
+    opkg remove <pkgname>
+    <note pkgname should be that from output of 'opkg list-installed'>
+
+8.  To exit out of rooted jail cell, enter 'exit' at the command prompt
+9.  copy over appropriate binary or library from jail chamber to main rootfs 
+    e.g. cp -avrf /home/root/packages/_install/usr/bin/sed /usr/bin/
+
+
+<Note>
+Currently installed packages are in /home/root/packages/_install/usr/local/src/installers
+
+

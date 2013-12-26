@@ -1,0 +1,24 @@
+"U-Boot Delay" INSTRUCTIONS
+================================================================================
+U-Boot Delay is the "countdown" during the bootloader stage
+
+1.  After flashing u-boot binary, the bootdelay will be defaulted to 5 seconds
+2.  After provisioning with Platform environment u-boot environment variables
+    The bootdelay will be set to 0, in order to minimize boot time
+3.  There are two mechanisms to change the bootdelay back to a non-zero value
+    This is primarily useful when it is needed to be within u-boot environment
+    (i)  flashing via sd card at u-boot prompt instead of wireless 
+    (ii) debugging x-loader, u-boot environment, or kernel boot
+4.  One option is to change bootdelay with u-boot utilities from linux user-space
+    This is when the target is already fully booted and logged in as root
+    fw_setenv bootdelay 5
+    reboot
+
+    <bootdelay will now be set to 5 seconds as default environment in u-boot>
+    <Reference HowTo-UseUBootEnv>
+5.  Another option is to place boot.scr script on the SD card and boot
+    This boot.scr script should be retrieved from <svn>/Gumstix/scripts/
+
+    It will redefine the bootdelay, conflicting with the global environment
+    This will allow u-boot to break at u-boot prompt
+    

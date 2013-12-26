@@ -1,0 +1,29 @@
+"Building U-Boot" INSTRUCTIONS
+================================================================================
+U-Boot is the second stage bootloader loaded by X-loader and before kernel loads
+U-Boot controls how kernel is loaded with appropriate command line configuration
+
+
+1.  The current source code is based off a GIT tag
+    git clone git://git.denx.de/u-boot.git u-boot
+    git checkout -f -b v2011.09_local v2011.09
+    
+    Code has already checked in as <svn>/Gumstix/src/u-boot-v2011-09.tgz
+    The code has already been checked in with the proper patches applied
+
+    <note label v2011.12 experiences bad RAM timing issues>
+    <note label v2010.09 experiences slow boot, slow nand performance, page alignment issues>
+2.  Building (at root of u-boot folder)
+    Precondition: (HowTo-SetupHostEnv or HowTo-CrossCompile)
+    WARNING: THIS STEP MUST BE DONE BEFOREHAND OR COMPILE WILL FAIL.
+
+    make distclean
+    make clean (remove built objects - if needed)
+    make omap3_overo_config (note that we are using default configuration)
+    make EXTRAVERSION=-platform  (to append platform to image name) 
+
+    <the output binary will be u-boot.bin in the root of u-boot folder>
+
+3.  Patches for u-boot can be found in <svn>/Gumstix/patches/u-boot     
+    
+    

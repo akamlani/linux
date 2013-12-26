@@ -1,0 +1,15 @@
+"Remount RO/RW" INSTRUCTIONS
+================================================================================
+Release 2.5 introduced read-only filesystem
+Therefore you will not be able to make changes without remounting as read-write (rw)
+
+1.  Script (On Target): /home/root/scripts/switch-mount.sh 
+    remount rootfs as needed
+2.  Execution
+    For read-write: /home/root/scripts/switch-mount.sh rw
+    For read-only: /home/root/scripts/switch-mount.sh ro
+3.  Default is ro upon boot up
+    <<Operation only does it for the current boot, not successive boots if changed>>
+
+
+

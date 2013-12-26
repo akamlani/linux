@@ -1,0 +1,125 @@
+"Cross-Debug With Eclipse IDE" INSTRUCTIONS
+================================================================================
+Need an IDE to debug your code on target?
+You can use Eclipse from your host pc and debug target binaries or libraries
+
+1.  Release 2.5 introduced the ability to debug with cross-gdb
+    Releases prior to 2.5 will not function correctly due to a version mismatch on host and target
+2.  Gross-gdb can be used by cmd line
+    This "HowTo" introduces debugging with graphical eclipse IDE
+3.  Install Eclipse IDE for C/C++ Developers
+    Windows: <svn>/Gumstix/toolset/eclipse-cpp-indigo-SR1-incubation-linux-gtk.tar.gz
+    Linux: <svn>/Gumstix/toolset/eclipse-cpp-indigo-SR1-incubation-linux-gtk.tar.gz
+
+    <Note this should just be an extraction>
+    <Eclipse will then be run directly from this path>
+    e.g. Installation Path:
+    /home/user/tools/ide/eclipse/
+
+    Dependencies:
+    java (sun-java6-jre) from sun (java.sun.com)
+
+4.  Cross-Compile can be done by Command Line or by within the IDE
+    <Reference HowTo-CrossCompile>
+5.  Once environment has been setup, As in Step 4
+    Now a project can be Setup using existing codebase within Eclipse
+    (/home/user/tools/ide/eclipse/eclipse)
+   
+    (a) File->New Makefile Project With Existing Code
+        Project Name (e.g. Rover3g)
+        Languages: C/C++
+        Toolchain: None
+        Navigate to src code to import (<svn>/Gumstix/src)
+    (b) Disable Indexer
+        Window->Preferences->C/C++->Indexer
+        Uncheck Enable Indexer
+        Uncheck Enable Project Specific Settings (if needed)
+    (c) Disable Code Analysis Option
+        (i)  Window->Preferences->Code Analysis
+        (ii) Project->Prioerites->C/C++->Code Analysis
+        Uncheck Potential Programming Problems
+        Uncheck Syntax and Semantic Errors
+
+        As we are using a toolchain outside the IDE, it gets confused
+        We will go off errors and warnings from output on console
+    (d) compile the project from Run->BuildAll
+        Individual selection rules can also be done for part of the project (e.g. Rover)
+
+6.  Install Additional Software
+    If Step 4(d) fails, additional software may be required
+   
+    (a) CDT (this may already be installed with newest features)
+        http://download.eclipse.org/tools/cdt/releases/indigo
+        Enter CDT text on filter text
+        Selections: 
+        CDT Main Features->C/C++ Development Tools
+        CDT Optional Features->
+        C/C++ GNU Toolchain Build Support
+        C/C++ GNU Toolchain Debug Support
+        C/C++ Development Platform
+        C/C++ DSF GDB Debugger Integration
+    (b) rxtx (should only be for Java serial console access)
+        http://rxtx/qbang.org/eclipse
+        Selectons:
+        RXTX2.1-7r3->* End-User Runtime
+    (c) Target Management Terminal
+        Select From -All Available Sites-
+	Filter Text "Target"
+    Mobile and Device Management->Target Management Terminal
+7.  Setup Terminal serial window (Optional)
+    Windows->Show View->Terminal->Terminal
+    Create a New Serial Connection from (N logo)
+    Enter port and proper settings (e.g. /dev/ttyUSB0,115200,etc)
+8.  Setup Terminal ssh window within Eclipse
+    Window->Open Perspective->Other->Remote System Explorer
+    Define a New Connection (Right Click)->Remote System Type as Linux
+    Host->Target IP Address
+    Configuration->ssh.files
+    Configuration->process.shell.linux
+    Configuration->ssh.shells
+   
+    From the New Connection Created:
+    Target IP Address->Ssh shells
+    Right click and launch terminal
+      
+9.  Start GdbServer on Target (Gumstix)
+    From Telnet or Serial Console:
+    gdbserver <IP of Host PC>:<port> program arguments
+
+    e.g. gdbserver 172.21.8.69:2001 setup r -s 66
+10. Copy the following files from template environment (<svn>/Gumstix/template)
+    rename gdbinit to .gdbinit into env area (/home/user/tools/ide/env)
+    copy Gumstix-Remote-Template.launch into <Project>/.settings/
+    copy Gumstix-Template.Lanuch into <Project>/.settings
+    
+    Modify Templates as Appropriate from Run->Debug Configurations:
+    (a) Gumstix-Remote Template (will copy binary from host pc)
+        (i) Main Tab->
+        - Select Proper Connection Target (IP), Properties (Path to Upload)
+        - C/C++ Application local path on host PC
+        - Remote Absolute Path for C/C++ Application
+        (ii) Arguements Tab
+        - Modify for arguements tab (template based on setup program)
+        (iii) Debugger->Main Tab
+        - Modify path to .gdbinit for GDB Command Line   
+        (iv) Debugger->Shared Libraries
+        - Modify Paths to shared libraries (library dependency package) 
+        (v) Gdbserver Settings
+        - Modify Port Number Selection
+          Should be same port number as gdbserver started on target
+    (b) Gumstix-Template
+        (i) Main Tab->
+        - Select C/C++ Application
+        (ii) Arguements Tab
+        - Modify for arguements tab (template based on setup program)
+        (iii) Debugger Tab
+        - Modifications for Debugger Tab are the same as in (a)
+          Change Connection Tab for Target IP and Port Number
+11. Start Debugging
+    Run->Debug/Run->Run
+    Select breakpoints as appropriate    
+12. Repeat Steps 9 and 10 for each new session     
+    
+    
+
+

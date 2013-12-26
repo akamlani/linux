@@ -1,0 +1,123 @@
+<html>
+
+<!--
+Author:  Ari Kamlani
+Company: Platform
+Date:    04/12/12
+-->
+
+<div class="header">
+<p><b><i><small>PLATFORM Sports Project</small></b></i></p>
+</div>
+
+<hr>
+
+<head><title>Gumstix Starter Guide</title></head>
+<h4><center>Gumstix Breakdown Instructions<center></h4>
+<hr>
+
+
+<body>
+
+<h4><u>Beginners Guide</u></h4>
+<ul>
+<li><a HREF="./HowTo-QuickStart.txt">QuickStart</a><br>
+<i>Not sure where to Start - Here's a Quick Starter Guide</i>
+<li><a HREF="./HowTo-SetupHostEnv.txt">Setup Host Env</a><br>
+<i>Basic environment to Setup Building Image Components</i>
+<li><a HREF="./HowTo-TipsAndTricks.txt">Tips And Tricks</a><br>
+<i>Some handy info for cross-compiler or on target</i>
+</ul>
+
+
+<h4><u>Flashing Target</u></h4>
+<ul>
+<li><a HREF="./HowTo-CreateGumstixImage.txt">Burn Images (U-Boot)</a><br>
+<i>Flash Images to Nand from U-Boot</i>
+<li><a HREF="./HowTo-UpdateNandBurnerScripts.txt">Update Nand Flash Scripts</a><br>
+<i>How to update Nand Burning Scripts for use with U-Boot</i>
+<li><a HREF="./HowTo-WirelessFlashGumstixImage.txt">Burn Images (Wireless)</a><br>
+<i>No Serial Access, Wireless Flash Instead...</i>
+<li><a HREF="./HowTo-SDCardImage.txt">Create SD Card Image</a><br>
+<i>Perform development on SD Card instead of Nand</i>
+</ul>
+
+
+<h4><u>Building Source</u></h4>
+<ul>
+<li><a HREF="./HowTo-BasicsOfGit.txt">Using Git</a><br>
+<i>Some help understanding the basics of Git</i>
+<li><a HREF="./HowTo-CrossCompile.txt">Cross-Compile (Host PC)</a><br>
+<i>Cross Compiler Binaries/Libraries instead of on Target</i>
+<li><a HREF="./HowTo-BuildKernel.txt">Building the Kernel</a><br>
+<i>Building Kernel source (uImage,update-loader-image)</i>
+<li><a HREF="./HowTo-KernelModules.txt">Building Kernel Modules</a><br>
+<i>Building Loadable Kernel Modules (*.ko files)</i>
+<li><a HREF="./HowTo-BuildUBoot.txt">Building U-Boot</a><br>
+<i>Building for second stage bootloader: u-boot.bin</i>
+<li><a HREF="./HowTo-BuildXloader.txt">Building X-loader</a><br>
+<i>Building for first stage bootloader: x-loader (MLO)</i>
+<li><a HREF="./HowTo-MakeRootfs.txt">Building rootfs image</a><br>
+<i>Building root filesystem image (rootfs.ubi) - normal nand operation</i>
+<li><a HREF="./HowTo-MakeRamfs.txt">Building initramfs ramdisk image</a><br>
+<i>Building ram filesystem image (intramfs.ramdisk) - for wireless update partition</i>
+<li><a HREF="./HowTo-Strip.txt">Stripping Binaries/Libraries</a><br>
+<i>Strip information from binaries/libraries</i>
+</ul>
+
+
+<h4><u>Debugging=on-target</u></h4>
+<ul>
+<li><a HREF="./HowTo-UseUBootEnv.txt">U-Boot Environment Area</a><br>
+<i>Controlling U-Boot Environment Variable partition</i>
+<li><a HREF="./HowTo-BreakAtUBootPrompt.txt">Break at U-Boot Prompt</a><br>
+<i>Change Bootdelay Countdown</i>
+<li><a HREF="./HowTo-RemountRootfs.txt">Remount filesystem (rw,ro)</a><br>
+<i>Remount the filesystem as read-write(rw) or read-only(ro)</i>
+<li><a HREF="./HowTo-UseOverlayOpkg.txt">Use Overlay for Opkg</a><br>
+<i>Install other binaries/libries through Opkg Manager</i>
+<li><a HREF="./HowTo-IncreaseCPUSpeed.txt">Change Max CPU OMAP 3x50 Speed</a><br>
+<i>Change the Max Rating CPU Speed</i>
+<li><a HREF="./HowTo-MeasureBootTime.txt">Measure Boot-Time/Shut-Down time</a><br>
+<i>Measure Boot-Time, Shut-Down Time (from Host PC)</i>
+<li><a HREF="./HowTo-UseSysfs.txt">Use Sysfs</a><br>
+<i>Get a view of the kernel from User Space</i>
+<li><a HREF="./HowTo-UseDebugFs.txt">Use Debugfs</a><br>
+<i>Change configuration of drivers (if available)</i>
+</ul>
+
+<h4><u>Debugging=off-target</u></h4>
+<ul>
+<li><a HREF="./HowTo-CrossDebugWithEclipse.txt">Cross Debug with Eclipse IDE</a><br>
+<i>Debug binaries on target with an IDE from Host PC</i>
+<li><a HREF="./HowTo-ConfigureForNFS.txt">Configure to Use NFS Filesystem</a><br>
+<i>Use a Network File System on Host PC as rootfs instead</i>
+</ul>
+
+<h4><u>Background=rootfs</u></h4>
+<ul>
+<li><a HREF="./HowTo-BeginRootfs.txt">Starting with rootfs</a><br>
+<i>High Level Overview of how rootfs was created</i>
+<li><a HREF="./HowTo-BusyBox.txt">Busybox for filesystem</a><br>
+<i>Unix Utilities for the Embedded World</i>
+<li><a HREF="./HowTo-CreateNativeGCC.txt">Native GCC on Target</a><br>
+<i>Creating Native GCC on Target</i>
+<li><a HREF="./HowTo-StageBuilding.txt">Staging environment</a><br>
+<i>Stage the environment as an intermediate phase</i>
+<li><a HREF="./HowTo-CreateOpkg.txt">Create Usage of Opkg</a><br>
+<i>How Opkg Management Overlay was created</i>
+<li><a HREF="./HowTo-AddDeviceNodes.txt">Device Nodes (/dev)</a><br>
+<i>Need to add some more Device Nodes (/dev)</i>
+<li><a HREF="./HowTo-AddRemoveUser.txt">Users (root,svms)</a><br>
+<i>Need to Add or Remove a 'User' to the Target</i>
+</ul>
+
+<br>
+<hr>
+
+<div class="footer">
+<p><b><i><small>Copyright (c) PLATFORM Sports Project April 2012</b></i></small></p>
+</div>
+
+</body>
+<html>

@@ -1,0 +1,108 @@
+"CREATING AN OPKG" INSTRUCTIONS
+================================================================================
+These instructions document how to create an Opkg Respository Jail Chamber
+This is how the <svn>/Gumstix/packages/opkg-basic-installer.tgz was created
+Most Users will reference HowTo-UseOverlayOpkg instead
+
+
+1.  Download packages (*.ipk) from the following link:
+    http://www.angstrom-distribution.org/feeds/unstable/ipk/glibc/armv7a/base
+    Some Packages may need to be downloaded from:
+    http://www.gumstix.net/feeds/unstable/ipk/glibc/armv7a/base
+
+    <optional>
+    Packages.gz -> /opt/lib/ipkg/lists/cross
+2.  create additional directories under install area (/home/root/packages/_install)
+    mkdir -p /usr/lib/opkg
+    mkdir -p /var/lib/opkg
+    mkdir -p /var/lib/opkg/tmp
+    mkdir -p /var/run
+    mkdir -p /etc/opkg
+    mkdir -p /dev
+    mkdir -p /bin
+    mkdir -p /usr/bin
+    mkdir -p /opt/lib/ipkg/lists/cross
+3.  Copy following files with edit (as noted below) from Angstrom Distribution
+    Copy these to the main root filesystem
+    Copy these to the install area (/home/root/packages/_install)
+    /etc/opkg/opkg.conf
+    /etc/opkg/arch.conf
+
+    <<execute to edit proper install>>
+    echo "dest /home/root/packages/_install /home/root/packages/_install" >> /etc/opkg/opkg.conf
+4.  Copy mininum directories (from main root filesystem) to install opkg 
+    Within /home/root/packages/_install -> 
+    /bin/sh
+    /bin/tar
+    /bin/ls
+    /bin/mkdir
+    /bin/busybox
+5.  Copy over opkg dependencies (from main root filesystem)
+    /usr/bin/opkg-cl
+    /usr/bin/opkg <as symbolic link, -a option with cp>
+    /usr/lib/opkg/alternatives
+    /usr/bin/update-alternatives   
+6.  install packages for opkg
+    <also found in /home/root/packages/_install/usr/local/src/installers>
+    opkg -d /home/root/packages/_install install <ipkg name>
+
+    <note the option -d and directory path>
+    <this is our separate chamber for opkgs>
+
+    <packages for opkg replacement>
+    linux-libc-headers-dev_2.6.31-r6.6_armv7a.ipk
+    libc6_2.9-r37.4.6_armv7a.ipk
+    libopkg0_0.1.8+svnr609-r5.6_armv7a.ipk
+    opkg_0.1.8+svnr609-r5.6_armv7a.ipk
+
+    <opkg dependencies will be updating in main root filesystem>
+    <so rerun this step after step 7 in jail chamber>
+7.  change root to install area: /home/root/packages/_install
+    chroot /home/root/packages_install
+
+8.  install remaining packages <in this order, due to dependencies>
+    opkg install <pckg name>
+    <also found in /home/root/packages/_install/usr/local/src/installers>
+
+    libgmp10_5.0.1-r1.1.6_armv7a.ipk
+    libmpfr4_3.0.0-r3.1.6_armv7a.ipk
+    libattr1_2.4.44-r4.6_armv7a.ipk
+    libcap2_2.20-r0.6_armv7a.ipk
+    libthread-db1_2.9-r37.4.6_armv7a.ipk
+    libgcc1_4.3.3-r25.2.6_armv7a.ipk
+    libstdc++6_4.3.3-r23.2.6_armv7a.ipk
+    glibc-extra-nss_2.9-r37.4.6_armv7a.ipk
+    make_3.82-r0.6_armv7a.ipk
+    gcc_4.3.3-r25.1.6_armv7a.ipk
+    g++_4.3.3-r25.1.6_armv7a.ipk
+    binutils_2.18.50.0.7-r13.1.6_armv7a.ipk
+    gcc-symlinks_4.3.3-r25.1.6_armv7a.ipk
+    g++-symlinks_4.3.3-r25.1.6_armv7a.ipk
+    binutils-symlinks_2.18.50.0.7-r13.1.6_armv7a.ipk
+    tar_1.23-r1.6_armv7a.ipk
+    ncurses-terminfo-base_5.7+20110115-r16.6_armv7a.ipk
+    ncurses-terminfo_5.7+20110115-r16.6_armv7a.ipk
+    libtinfo5_5.9-r0.6_armv7a.ipk
+    glib-1.2_1.2.10-r5.6_armv7a.ipk
+    busybox-mountall_1.13.2-r42.4.6_armv7a.ipk
+    sed_4.2.1-r0.6_armv7a.ipk
+    sysvinit-utils_2.86-r63.6_armv7a.ipk
+    sysvinit-inittab_2.86-r66.6_overo.ipk
+    sysvinit_2.86-r63.6_armv7a.ipk
+    update-rc.d_0.7-r2.6_all.ipk
+    busybox_1.13.2-r42.4.6_armv7a.ipk
+    busybox-syslog_1.13.2-r42.4.6_armv7a.ipk
+    coreutils_8.5-r6.0.6_armv7a.ipk
+
+    <verify replacements have been made for steps 4+5>
+    <note: these packages allow to natively compile gcc on target>
+    <note: you will need to copy include files from /usr/include>
+
+9. download further packages (*.ipk) from links in step1
+   install as in step 8   
+   <copy produced binaries/libraries from chamber area (packages/_install) to main rootfs>
+   
+   
+
+
+

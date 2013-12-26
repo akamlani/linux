@@ -1,0 +1,107 @@
+"CREATING A GUMSTIX IMAGE" INSTRUCTIONS
+====================================================================
+Instructions documenting flashing binaries to NAND
+From U-boot perspective with Serial Access and SD Card present
+This is not the Wireless Update Procedure!!!
+
+
+1.  Setup Connections 
+    Connect Mini-USB connector to target, USB to PC
+    Connect Gumstix Accessory Power Adapter to Target
+
+2.  Terminal Console
+    Start Terminal Serial Console on PC with normal settings 
+    (e.g. minicom, teraterm, hyperterminal) 
+
+3.  Insert "MASTER" FAT partitioned SD Card into Gumstix
+    Should contain the following:
+    MLO, u-boot.bin, uImage, rootfs.ubi, update-loader-image, initramfs.ramdisk
+    nand-burner.scr, boot.scr (boot.scr if bootdelay=0 is set)
+
+4.  Reset Board (if needed)
+    Reconnect power to reset board
+    OR if already at U-Boot Prompt -> type "reset"
+
+5.  From Serial Connection At U-Boot Prompt 
+    <After u-boot loads: Loading u-boot.bin from> 
+    Hit a Key Upon Seeing: "Hit any key to stop autoboot: "
+    Should then see prompt: "Overo #"
+
+    <If no countdown is shown>
+    Change bootdelay from userspace with 'fw_setenv bootdelay 5 before this step'
+    Or Use boot.scr on SD card so u-boot prompt will break
+
+6.  Set Environment Variable to burn binaries
+    setenv nandburner_option 6
+    <Verify with printenv nandburner_option>
+
+7.  Execute the following to burn binaries to NAND:
+    mmc rescan 0; fatload mmc 0 $loadaddr nand-burner.scr; source $loadaddr
+
+8.  Check Status
+    <If successful, should see following output upon completion:> 
+    FLASH PROGRAMMING COMPLETE!!!
+
+9.  Reset Board
+    At u-boot prompt -> type "reset"
+
+10. Set Environment Variable to change UBoot Environment Variables
+    setenv nandburner_option 7
+    <Note after Step 9; all previous environment variables are erased and defaulted>
+    <Verify with printenv nandburner_option>
+
+11. Execute Burn Sequence (Same as Step 7)
+    mmc rescan 0; fatload mmc 0 $loadaddr nand-burner.scr; source $loadaddr
+
+12. Check Status 
+    <If successful, should see following output upon completion:> 
+    FLASH PROGRAMMING COMPLETE!!!
+
+13. Remove SD Card
+    From this point, do not use this "MASTER" SD Card to Boot
+    Replace with blank SD Card if needed
+
+14. Reset Gumstix 
+    At u-boot prompt -> type "reset"
+
+15. Login to Rover as root
+    vector66 login: root
+
+16. Remount the filesystem as rw 
+    (/home/root/scripts/switch-mount.sh rw)
+    
+17. Modify IP Addresses
+    vi /etc/network/interfaces
+
+    Wired Address: change the address (x=rover#)
+    After following line: iface eth0 inet static
+    Modify Static IP: address 192.168.11.x
+    <Or applicable IP address>
+    
+    Wireless Address: change the address (x=rover#)
+    After following line: iface wlan0 inet static
+    Modify Static IP: address 172.21.8.x
+
+18. Execute /etc/init.d/networking
+    <This will restart the networking interaces with the new IP Addresses>
+    
+    Open a new cmd window on the host pc and verify able to ping new IP addresses
+    ping 172.21.8.x
+
+19. Execute setup program from untarred x.tar
+    <<x=rover#>>
+    ./setup r -s x       
+ 
+20. Kill any programs writing to sd card and flush to sd card (sync)
+    e.g. killall Rover; sync
+
+21. Reboot the Board
+    Run reboot command at prompt: "reboot"
+
+22. CONGRATS YOU ARE DONE - YOU ARE A MASTER NAND FLASHER:)
+
+
+NOTES:
+- You can run commands on separate line instead of single line separated by semicolon (;)
+- U-boot terminal console does not like backspaces so much, so may need to retype command if backspace used
+- Version 2.5 introduced read-only filesystem, so remount as "rw" as required

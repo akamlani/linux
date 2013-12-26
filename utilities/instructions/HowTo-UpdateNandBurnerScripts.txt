@@ -1,0 +1,24 @@
+"Updating Nand Burner Scripts" INSTRUCTIONS
+================================================================================
+1.  Nand Burner scripts are used to burn images from an SD-Card to NAND
+    The commands used are though from u-boot, so you must be at u-boot overo prompt
+    e.g. overo#
+2.  Script: nand-burner.cmd
+    Output Binary: nand-burner.scr
+3.  .scr files are binary files recognized by u-boot
+    Must be manually loaded into memory and then executed
+    e.g. fatload mmc 0 $loadaddr nand-burner.scr; source $loadaddr
+4.  edit the script
+    nand-burner.cmd can be edited just like any other shell script
+5.  generate binary (nand-burner.scr)
+    mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "nand-burner" -d nand-burner.cmd nand-burner.scr
+
+    <note ths requires u-boot mkimage tool, so cross-compiler environment must be properly setup>
+    Sync down the source for u-boot <svn>/Gumstix/src/u-boot-v2011-09.tgz and extract>
+    Reference instructions on building u-boot (HowTo-BuildUBoot)
+
+    WARNING: Setup Scripts must have been properly executed first
+    <<Reference HowTo-SetupHostEnv, HowTo-CrossCompile>>
+6.  copy the new nand-burner.scr to SD card and perform normal steps to execute script
+    <Reference HowTo-CreateGumstixImage>
+    

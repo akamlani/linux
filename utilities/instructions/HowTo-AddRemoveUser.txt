@@ -1,0 +1,33 @@
+"Adding or Delete a New User" INSTRUCTIONS
+================================================================================
+1.  Currently 'root' and 'svms' are the current users defined on Gumstix target.
+2.  Current user(s) information: 
+    username: 'root', password:''
+    username: 'svms', password:'QuickSpot01'
+3.  To add a new user: 
+    useradd -s /bin/bash -G <group> -m -k /dev/null -h /home/<user name> <user name>
+    e.g. useradd -s /bin/bash -G svms -m -k /dev/null -h /home/svms svms
+
+    <assumes existing group svms defined>
+4.  To add a new group
+    addgroup <group name>
+    e.g. addgroup svms
+
+
+#   To remove a user
+    deluser <user name>
+    e.g. deluser svms
+
+#   Change password for user
+    When logged in as the user (e.g. svms)
+    passwd <new password>
+    passwd QuickSpot01
+
+#   To change between users
+    su - <username>
+    e.g. su - svms
+
+#   To change ownership of directories and files
+    chown -R -v <user> <folder + Files to change>
+    e.g. chown -R -v svms:svms /home/svms
+

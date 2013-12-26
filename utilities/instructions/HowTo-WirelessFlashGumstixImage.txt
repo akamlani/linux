@@ -1,0 +1,165 @@
+"WIRELESS FLASH A GUMSTIX IMAGE" INSTRUCTIONS
+------------------------------------------------------------------------
+Don't have Access to Serial or Ethernet?  No Problem.
+Use Wireless Update Step Procedure instead.
+
+
+# (A): Moving from Release 2.2 (plus patches) to Release 2.x
+1.  Enable Wi-Fi with magnet
+    <<SSID will still be jim-network for Release 2.2>>
+
+2.  SFTP into device and place update patch and ramfs image on rootfs
+    sftp root@172.21.8.<x>
+   
+    put update_rel_2_x.tgz 
+    <<from /svn/Gumstix/update/update_rel_2_x.tgz>>
+   
+    put update-loader-image /home/root/images
+    <<from /svn/Gumstix/binaries/update-loader-image>>
+    put initramfs.ramdisk /home/root/images
+    <<from /svn/Gumstix/binaries/initramfs.ramdisk>>
+
+    Verify the byte sizes are correct of the images
+    (ls -l /home/root/images)
+
+3.  SSH into device and untar the update patch
+    ssh root@172.21.8.<x>
+    tar -xzvf update_patch_rel_2_x.tgz -C /
+
+4.  Disable Watchdog on target; Kill Rover program on Target
+    wd 0
+    
+5.  Execute Switch Boot Device script wirelessly (ssh) 
+    /home/root/scripts/switch-boot-device.sh
+   
+    choose option #3 : Boot from Update Loader (SD Card)
+    WARNING: VERIFY THAT SD CARD IS INSERTED
+    This will boot device into update loader SD Card Mode
+    The device will then be rebooted automatically
+    <<upon reboot will see UPDATE LOADER (INITRAMFS) DISTRIBUTION --- Release v1.y>>
+   
+    WiFi will be enabled by default in this image, so no need for magnet
+    SSID for Wifi will now be svms-network; you will need to change on host PC accordingly
+    The Wireless IP Address should be 172.21.8.66 on this image
+
+6.  SFTP the binaries to be flashed to the device (now booting ramfs based image)
+   
+    <<on host pc>>
+    tar -czvf binaries_release_2_z.tgz u-boot.bin uImage rootfs.ubi 
+    sftp root@172.21.8.66
+    <<Note it is not possible to burn MLO from user space, requires nand ecc hw selection>>
+    <<Linux nand omap driver in this kernel release only supports ecc sw selection>>
+  
+    put binaries_release_2_z.tgz /home/root/images
+    cd /home/root/images; tar -xzvf binaries_release_2_z.tgz 
+    <<Binaries are expected to be placed in /home/root/images>>
+    <<Not required to tar up the binaries, this is just an example>>
+    <<Binaries for particular release in svn located in <svn>/Gumstix/binaries>>
+
+    put update-loader-image /home/root/images   
+    put initramfs.ramdisk /home/root/images
+    <<Only required if would like to burn wireless update capability to nand>>
+    <<This will eliminate placing the images on the SD Card Step for reuse>>
+    <<Can then boot from separate nand partitions during switch boot selection>>
+    
+    Verify the byte sizes are correct of the images after extraction
+    (ls -l /home/root/images)
+
+7.  Burn Binaries to nand flash
+    Execute script: /home/root/scripts/update-loader-burnimages.sh
+    Select option 4: burn all binaries
+    <<Note this option will also set environment variables accordingly>>
+    <<Environment variables will be changed anytime u-boot is altered>
+   
+    Execute script: /home/root/scripts/update-loader-burnimages.sh
+    Select option 5: burn update-loader
+    <<Note this is so that we can boot from separate nand partition later - if wanted>>
+    <<Warning: can only run this option when booting from sd card>>
+
+8.  Execute Switch Boot Device script wirelessly 
+    /home/root/scripts/switch-boot-device.sh
+    Select Option 1: Normal Boot
+    <<This will reboot the device to the nand partition binaries that were just flashed>>
+    <<Wireless is turned off by default in release 2_4 and onwards, so magnet is required>>
+    <<Reference HowTo-TipsAndTricks to Keep Wireless On>>
+
+9.  Device has now booted into the image just flashed
+    Use Magnet to enable WiFi
+    <<Default IP Address is used, 172.21.8.66>>
+
+    Remount the filesystem as rw on target
+    (/home/root/scripts/switch-mount.sh rw)
+    
+10. Modify IP Addresses
+    vi /etc/network/interfaces
+
+    Wired Address: change the address (x=rover#)
+    After following line: iface eth0 inet static
+    Modify Static IP: address 192.168.11.x
+    <Or applicable IP address>
+    
+    Wireless Address: change the address (x=rover#)
+    After following line: iface wlan0 inet static
+    Modify Static IP: address 172.21.8.x
+ 
+11. Execute /etc/init.d/networking
+    <This will restart the networking interaces with the new IP Addresses>
+    
+    Open a new cmd window on the host pc and verify able to ping new IP addresses
+    ping 172.21.8.x
+
+12. Execute setup program from untarred x.tar
+    <<x=rover#>>
+    ./setup r -s x       
+ 
+13. Kill any programs writing to sd card and flush to sd card (sync)
+    e.g. killall Rover; sync
+
+14. Reboot the Board
+    Run reboot command at prompt: "reboot"
+
+15. DONE!!!
+
+
+  
+# (B): Moving from Release 2.7 onwards
+1.  Assumes update-loader-image, initramfs.ramdisk has now been flashed to nand partition 
+    As in (A) - Step 7
+
+2.  Enable Wifi with Magnet
+    Can also be enabled by setting environment variable: 
+    (a) 'fw_setenv svcenablewlan 1' 
+    (b) execute /etc/init.d/resetwlan0 or reboot device
+
+3.  Skip steps 2,3 from (A) 
+    <<Assuming update-loader-image, initramfs.ramdisk has been previously burned to Nand>>
+    <<No update patch (update_rel_2_x.tgz) step is required>>
+
+4.  Same as step 4 from (A)
+    Disable watchdog
+
+5.  Same as Step 5 from (A), But Selection Option 2 
+    /home/root/scripts/switch-boot-device.sh
+    Select Option 2: Boot update loader (nand)
+
+    This will boot device into update loader nand partition
+    Device will then be rebooted automatically
+    <<upon reboot will see UPDATE LOADER (INITRAMFS) DISTRIBUTION --- Release v1.y>>
+
+    WiFi will be enabled by default in this image, so no need for magnet
+    SSID for Wifi will now be svms-network; change on Host PC accordingly
+    The Wireless IP Address should be 172.21.8.66 on this image
+    
+6.  Same Steps (6-14) from (A), but remove association with ramfs binaries
+    <<No need to burn update-loader-image or initramfs.ramdisk to device, unless altered>>
+    <<Just perform operation relative to other binaries>>
+   
+7.  DONE!!!
+
+
+* Note: #Error on environment variables is not an error (it does not exist)
+* Note: x-loader (MLO) cannot be flashed from this method (partition locked - /dev/mtd0)
+* Note: Release 2.5 introduced read-only filesystem (so remount as rw rootfs may be required from user space)
+  <Reference HowTo-RemountRootfs>
+
+

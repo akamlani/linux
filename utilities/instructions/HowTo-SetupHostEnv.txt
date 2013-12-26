@@ -1,0 +1,68 @@
+"Setup Host Environment" INSTRUCTIONS
+================================================================================
+These instructions explain how to setup the host pc for proper environment
+
+WARNING: IF YOU DO NOT SETUP THIS STRUCTURE, YOU ARE ON YOUR OWN
+         THIS IS SO YOU CAN USE THE GIVEN SCRIPTS AND UTILITIES TO MAKE LIFE EASIER
+
+
+1.  Directory Structure
+    Template Provided (<svn>/src/dir-struct-template.tgz)
+    Extacted with sudo tar -xzvf dir-struct-template.tgz -C <path>
+    <top dir> (e.g. /home/user)
+
+    <top dir>/build
+                       /binaries
+                       /configure
+                                  /configs
+                                  /firmware
+                                  /patches
+                       /filesys
+                                  /rootfs
+                                  /rootfs-ramfs
+                                  makeramfs.sh
+                                  makerootfs.sh
+                                  ubinize.cfg
+                       /logs
+                       /scripts  
+                       /src      (*required per scripts)
+                                 /kernel
+                                        /linux-omap-2.6
+                                        /linux-omap-2.6-ramfs
+                                 /u-boot
+                                 /x-loader
+                                 /mntfs
+                                 /tools (per rootfs)
+                                       /archive
+                                       /busybox
+                                       /busybox-ramfs
+                                       
+                       /staging  (*required per scripts)
+                                /images
+    <top dir>/svn
+                       /projects/VectorII/Gumstix
+
+    <top dir>/toolchain  (*required per scripts)
+                       /arm-2009q1-203/Codesourcery/Sourcery_G++_Lite
+    <top dir>/tools    
+                       /ide
+                            /workspace
+                            /eclipse
+                            /env
+
+
+2.  Setup Scripts
+    There are two levels of setup scripts
+    PERFORM THIS STEP TO MAKE IMAGES AND CROSS COMPILE ON HOST PC
+    (i)  basic cross-compile environment (kernel,boot,x-loader)
+         <svn>/Gumstix/scripts/setbuildenv.sh ---> <top dir>/build/scripts
+
+    (ii) cross-compile ide (able to build basic environment + rover code)
+         ---> <top dir>/build/scripts
+         <svn>/Gumstix/scripts/makeenvtemplate.sh
+         <svn>/Gumstix/scripts/setenvide.sh
+         <svn>/Gumstix/scripts/setrover.sh
+ 
+    <the scripts should be sourced>
+    e.g. source ./scripts/setbuildenv.sh <input>
+    e.g. source ./makeenvtemplate.sh
