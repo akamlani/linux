@@ -1,0 +1,24 @@
+- Copy the binaries and scripts onto SD Card (First Partition-Partioned as FAT)
+To burn all images: MLO rootfs.ubi  u-boot.bin  uImage update-loader-image
+Scripts: nand-burner.scr  
+
+- Pass the following numerical option in environment variable
+1: MLO
+2: uboot
+3: uImage
+4: rootFS
+5. update loader
+6: all binaries
+7: env variables
+
+- Define environment variable at u-boot prompt
+setenv nandburner_option <<Enter Option Number Here>
+e.g. to burn all images: setenv nandburner_option 6
+
+
+- Execute Script at u-boot (hit key on 5 second countdown)
+mmc rescan 0; fatload mmc 0 $loadaddr nand-burner.scr; source $loadaddr
+
+- Status
+Reports success or failure
+
